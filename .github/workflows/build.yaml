@@ -24,7 +24,7 @@ jobs:
         steps:
             - uses: actions/checkout@v4
             - name: Login server and do something
-              uses: appleboy/ssh-action@v1.0.2
+              uses: appleboy/ssh-action@v1.0.3
               with:
                   host: ${{ secrets.SSH_HOST }}
                   username: ${{ secrets.SSH_USER }}
