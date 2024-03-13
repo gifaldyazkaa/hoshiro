@@ -37,6 +37,9 @@ $ bun install
 ```
 MONGODB_URI="your mongodb connection uri"
 SECRET_SESSION="hashed secret string"
+DISCORD_CLIENT_ID="discord client id"
+DISCORD_CLIENT_SECRET="discord client secret"
+DISCORD_REDIRECT_URI="discord redirect uri"
 ```
 
 ### 🚀 Start development server

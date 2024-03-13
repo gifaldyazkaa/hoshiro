@@ -9,8 +9,8 @@ describe('GET /', async () => {
         expect(res.statusCode).toBe(200);
         expect(res.type).toBe('application/json');
     });
-    it('Should return _APPNAME value', () => {
-        expect(res.body._APPNAME).toBeString();
+    it('Should return app value', () => {
+        expect(res.body.app).toBeString();
     });
 });
 
@@ -30,30 +30,22 @@ describe('GET /:region', () => {
     });
 });
 
-describe('GET /protected', async () => {
-    const res = await request(app).get('/protected');
-    it('Should return 401 status code', () => {
-        expect(res.statusCode).toBe(401);
-        expect(res.unauthorized).toBeTrue();
-        expect(res.type).toBe('application/json');
-    });
-});
+// TODO Rewrite testing units for authentication, users, and profile routes
+// describe('POST /auth/register', async () => {
+//     const res = await request(app).post('/auth/register');
+//     it('Should return 401 status code', () => {
+//         expect(res.statusCode).toBe(401);
+//         expect(res.unauthorized).toBeTrue();
+//     });
+// });
 
-describe('POST /auth/register', async () => {
-    const res = await request(app).post('/auth/register');
-    it('Should return 401 status code', () => {
-        expect(res.statusCode).toBe(401);
-        expect(res.unauthorized).toBeTrue();
-    });
-});
-
-describe('POST /auth/login', async () => {
-    const res = await request(app).post('/auth/login');
-    it('Should return 401 status code', () => {
-        expect(res.statusCode).toBe(401);
-        expect(res.unauthorized).toBeTrue();
-    });
-});
+// describe('POST /auth/login', async () => {
+//     const res = await request(app).post('/auth/login');
+//     it('Should return 401 status code', () => {
+//         expect(res.statusCode).toBe(401);
+//         expect(res.unauthorized).toBeTrue();
+//     });
+// });
 
 describe('POST /:region', () => {
     it('Should return 401 status code', () => {

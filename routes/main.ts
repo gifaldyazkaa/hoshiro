@@ -1,26 +1,16 @@
 // @ts-nocheck
 import express, { Router } from 'express';
-import { authenticateJWT } from '../middleware/auth';
-import { Request } from 'express-jwt';
-import { Response } from 'express';
-import { useYTData } from '../functions/useYTData';
-import { root } from './info/root';
-import { registerRoute } from './auth/register';
-import { loginRoute } from './auth/login';
-import { protectedRoute } from './protected/test';
+import { guard } from '../middleware/auth';
+import { Response, Request } from 'express';
 import { regions } from '../constants/regions';
-import { changePassword } from './auth/changePassword';
-import { changeUsername } from './auth/changeUsername';
-import { notFound } from './info/notfound';
+import { name, version } from '../package.json';
+import { useYTData } from '../functions/useYTData';
 
 const router: Router = express.Router();
 
-router.get('/', root);
-router.post('/auth/register', registerRoute);
-router.post('/auth/login', loginRoute);
-router.patch('/auth/password', changePassword);
-router.patch('/auth/username', changeUsername);
-router.get('/protected', protectedRoute);
+router.get('/', (req, res) => {
+    res.send({ app: name, message: 'Hello!', version: version });
+});
 
 regions.forEach((region) => {
     // Public routes
@@ -46,10 +36,10 @@ regions.forEach((region) => {
 
     // Protected routes
     router.post(`/${region.code}`, [
-        authenticateJWT(),
+        guard(),
         async (req: Request, res: Response) => {
             let { name, personality, birthdate, group, status, handle } = req.body;
-            let contributors = req.auth;
+            let contributors = req.user;
             if (!name) return res.status(422).json({ message: 'Name is required!' });
             if (!personality) personality = '-';
             if (!birthdate) birthdate = '-';
@@ -70,11 +60,11 @@ regions.forEach((region) => {
         },
     ]);
     router.patch(`/${region.code}/:handle`, [
-        authenticateJWT(),
+        guard(),
         async (req: Request, res: Response) => {
             let { name, personality, birthdate, group, status, handle } = req.body;
             let params = { handle: req.params.handle };
-            let contributors = req.auth;
+            let contributors = req.user;
 
             try {
                 const data = await region.db.findOne(params);
@@ -96,8 +86,5 @@ regions.forEach((region) => {
         },
     ]);
 });
-
-// NEVER PLACE THIS UPSIDE
-router.get('*', notFound);
 
 export default router;
